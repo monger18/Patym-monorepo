@@ -79,3 +79,14 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
 - [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
 - [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+
+# HOW TO START A PROJECT Locally
+
+1. Clone the repo
+2. npm install
+3. cd packages/db
+4. Adding a .env file with DATABASE_URL
+5. npx prisma generate dev
+6. npx prisma generate
+7. Add .env to app/user-app
+8. Add npm run dev
