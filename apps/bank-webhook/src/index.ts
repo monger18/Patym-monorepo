@@ -9,24 +9,26 @@ app.post('/hdfcWebhook', async (req, res) => {
     amount: req.body.amount,
   }
   try {
-    await db.balance.update({
-      where: {
-        userId: paymentInformation.userId,
-      },
-      data: {
-        amount: {
-          increment: paymentInformation.amount,
+    await db.$transaction([
+      db.balance.updateMany({
+        where: {
+          userId: paymentInformation.userId,
         },
-      },
-    })
-    await db.onRampTransaction.update({
-      where: {
-        token: paymentInformation.token,
-      },
-      data: {
-        status: 'Success',
-      },
-    })
+        data: {
+          amount: {
+            increment: paymentInformation.amount,
+          },
+        },
+      }),
+      db.onRampTransaction.updateMany({
+        where: {
+          token: paymentInformation.token,
+        },
+        data: {
+          status: 'Success',
+        },
+      }),
+    ])
     res.status(200).json({
       message: 'Captured',
     })
