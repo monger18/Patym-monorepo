@@ -1,6 +1,7 @@
 import { Card } from '@repo/ui/card'
 export const OnRampTransactions = ({
   transactions,
+  title = 'Recent wallet Transactions',
 }: {
   transactions: {
     time: Date
@@ -8,16 +9,17 @@ export const OnRampTransactions = ({
     status: string
     provider: string
   }[]
+  title?: string
 }) => {
   if (!transactions.length) {
     return (
-      <Card title="Recent Transactions">
-        <div className="text-center pb-8 pt-8">No recent Transactions</div>
+      <Card title={title}>
+        <div className="text-center pb-8 pt-8">No {title}</div>
       </Card>
     )
   }
   return (
-    <Card title="Recent Transactions">
+    <Card title={title}>
       <div className="pt-2">
         {transactions.map((t) => (
           <div className="flex justify-between">

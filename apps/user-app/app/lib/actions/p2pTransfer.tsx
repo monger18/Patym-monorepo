@@ -3,6 +3,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth'
 import prisma from '@repo/db/client'
+import { timeStamp } from 'console'
 
 export async function p2pTransfer(to: string, amount: number) {
   const session = await getServerSession(authOptions)
@@ -48,6 +49,15 @@ export async function p2pTransfer(to: string, amount: number) {
       },
       data: {
         amount: { increment: amount },
+      },
+    })
+
+    await tx.p2pTransfer.create({
+      data: {
+        fromUserId: Number(fromUser),
+        toUserId: toUser.id,
+        amount,
+        timestamp: new Date(),
       },
     })
   })
