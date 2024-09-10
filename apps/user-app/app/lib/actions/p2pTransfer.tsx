@@ -3,9 +3,15 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth'
 import prisma from '@repo/db/client'
-import { timeStamp } from 'console'
+import { p2pTransferSchema } from '@repo/zodtypes/types'
 
 export async function p2pTransfer(to: string, amount: number) {
+  const res = p2pTransferSchema.safeParse({ amount: amount, to: to })
+  if (!res.success) {
+    return {
+      message: 'Invalid Data',
+    }
+  }
   const session = await getServerSession(authOptions)
   const fromUser = session?.user?.id
 

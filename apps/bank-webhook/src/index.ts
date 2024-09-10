@@ -36,7 +36,7 @@ app.post('/hdfcWebhook', async (req, res) => {
       }),
     ])
     res.status(200).json({
-      message: 'Captured',
+      message: 'Successfully Updated',
     })
   } catch (error) {
     console.log(error)
@@ -46,4 +46,4 @@ app.post('/hdfcWebhook', async (req, res) => {
   }
 })
 
-app.listen(3003, () => console.log('server started'))
+app.listen(3003, () => console.log('Server is running on port 3003'))

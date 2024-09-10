@@ -3,6 +3,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth'
 import prisma from '@repo/db/client'
+import { onRampTransSchema } from '@repo/zodtypes/types'
 
 export async function createOnRampTransactions(
   provider: string,
@@ -13,6 +14,14 @@ export async function createOnRampTransactions(
   if (!session?.user || !session.user?.id) {
     return {
       message: 'Unauthenticated request',
+    }
+  }
+
+  const res = onRampTransSchema.safeParse({ amount, provider })
+  if (!res.success) {
+    return {
+      message: 'Invalid data',
+      data: null,
     }
   }
 
