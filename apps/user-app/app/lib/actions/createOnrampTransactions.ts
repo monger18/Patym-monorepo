@@ -5,7 +5,6 @@ import { authOptions } from '../auth'
 import prisma from '@repo/db/client'
 import { onRampTransSchema } from '@repo/zodtypes/types'
 import axios from 'axios'
-import { log } from 'console'
 
 export async function createOnRampTransactions(
   provider: string,
