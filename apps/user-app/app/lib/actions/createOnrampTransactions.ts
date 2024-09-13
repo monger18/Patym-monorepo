@@ -4,6 +4,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth'
 import prisma from '@repo/db/client'
 import { onRampTransSchema } from '@repo/zodtypes/types'
+import axios from 'axios'
+import { log } from 'console'
 
 export async function createOnRampTransactions(
   provider: string,
@@ -25,18 +27,36 @@ export async function createOnRampTransactions(
     }
   }
 
-  const token = (Math.random() * 1000).toString()
-  await prisma.onRampTransaction.create({
-    data: {
-      provider,
-      status: 'Processing',
-      startTime: new Date(),
-      token: token,
-      userId: Number(session?.user?.id),
-      amount: amount * 100,
-    },
-  })
-  return {
-    message: 'Done',
+  try {
+    const token = (Math.random() * 1000).toString()
+    await prisma.onRampTransaction.create({
+      data: {
+        provider,
+        status: 'Processing',
+        startTime: new Date(),
+        token: token,
+        userId: Number(session?.user?.id),
+        amount: amount * 100,
+      },
+    })
+    const onRampBackEndRequest = await axios.post(
+      'http://localhost:3003/hdfcWebhook',
+      {
+        amount: amount * 100,
+        user_identifier: Number(session?.user?.id),
+        token: token,
+      }
+    )
+
+    if (onRampBackEndRequest.status !== 200) {
+      throw { message: 'Internal Server Error' }
+    }
+    return {
+      message: 'Transactions initiated Successfully',
+    }
+  } catch (error) {
+    return {
+      Error: (error as Error).message,
+    }
   }
 }
